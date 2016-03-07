@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class WordCount {
 	public static void main(String[] argv) {
-		String wordToCount = "man", fileName = "pg2600.txt";
+		String wordToCount = "the", fileName = "pg2600.txt";
 		int count = 0;
 		BufferedReader br;
 		try {
