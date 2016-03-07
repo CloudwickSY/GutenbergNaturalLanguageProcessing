@@ -16,7 +16,7 @@ public class WordCount {
 		try {
 			br = new BufferedReader(new FileReader(fileName));
 			String line = null;
-			Pattern pattern = Pattern.compile("\b"+wordToCount+"\b");
+			Pattern pattern = Pattern.compile("\\b"+wordToCount+"\\b");
 			while ((line = br.readLine()) != null) {
 				Matcher matcher = pattern.matcher(line);
 				while(matcher.find()) count++;
