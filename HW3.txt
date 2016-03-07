@@ -4,5 +4,6 @@ HW
 2. In file "top10.txt" write the top 10 most frequent words and their frequencies.
 3. Create a definition of what we consider a word (hyphens and other special cases).
 # Extra: personal sort algorithm. Our own hash map structures, unit tests, strip words of extra parts like "es,s,ing" etc. 
+# To do: make it oop -> class NLP
 */
 
