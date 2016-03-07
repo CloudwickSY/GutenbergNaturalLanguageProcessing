@@ -1,0 +1,4 @@
+As word I have defined any continius set of caracters A-z
+Any other caracter is replaced with space.
+Known issues: Words containing letters with accent will break into two parts - two separate words.
+Possible solutions: Use already implemented parser that takes into consideration such spacial cases or implement one with the most important.
