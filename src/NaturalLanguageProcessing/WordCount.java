@@ -9,14 +9,14 @@ import java.util.regex.Pattern;
 
 public class WordCount {
 	public static void main(String[] argv) {
-		String wordToCount = "man", fileName = "pg2600.txt";
+		String wordToCount = "the", fileName = "pg2600.txt";
 		int count = 0;
-		BufferedReader br;
+		BufferedReader br = null;
 		
 		try {
 			br = new BufferedReader(new FileReader(fileName));
 			String line = null;
-			Pattern pattern = Pattern.compile("\\b"+wordToCount+"\\b");
+			Pattern pattern = Pattern.compile("\\b"+wordToCount+"\\b", Pattern.CASE_INSENSITIVE);
 			while ((line = br.readLine()) != null) {
 				Matcher matcher = pattern.matcher(line);
 				while(matcher.find()) count++;
@@ -26,6 +26,12 @@ public class WordCount {
 		} catch (IOException e) {
 			System.out.printf("BufferReader Error.\n");
 		} finally {
+			try {
+				br.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.printf("The occurance of the word %s in the fille was %d.\n", wordToCount, count);
 		}
 	}
