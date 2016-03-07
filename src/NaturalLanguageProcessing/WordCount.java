@@ -14,7 +14,7 @@ public class WordCount {
 			br = new BufferedReader(new FileReader(fileName));
 			String line = null;
 			while ((line = br.readLine()) != null) {
-				line.replaceAll("\\^[A-z]", " ");
+				line = line.replaceAll("[^A-z]", " ");
 				for (String word : line.split(" ")) {
 					if (word.compareToIgnoreCase(wordToCount) == 0) {// word.compareToIgnoreCase(wordToCount)==0
 						count++;
