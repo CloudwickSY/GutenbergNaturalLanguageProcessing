@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -34,9 +36,18 @@ public class WordCount {
 		} finally {
 			//System.out.printf("The occurance of the word %s in the fille was %d.\n", wordToCount, count);
 		}
-		int wordid = 0;
-		for (String word : wordHashMap.keySet()){
-			System.out.printf("Word: %s , freq: %d, id#: %d\n",word, wordHashMap.get(word),wordid++);
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter("tf.csv", "UTF-8");
+			writer.println("word, frequency");
+			for (String word : wordHashMap.keySet()){
+				writer.printf("%s, %d\n",word, wordHashMap.get(word));
+			}
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			writer.close();
 		}
 	}
 }
