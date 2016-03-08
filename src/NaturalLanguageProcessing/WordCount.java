@@ -12,6 +12,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+/*
+ * Goal :
+ * Can't save to file
+ * Can't figure out duplicates
+ * Sorting
+ */
 
 public class WordCount {
 	public static void main(String[] argv) {
@@ -25,7 +31,9 @@ public class WordCount {
 				line = line.replaceAll("[^A-z]", " ");
 				for (String word : line.split(" ")) {
 					word = word.toLowerCase(Locale.ENGLISH);
-					if(word.isEmpty()){continue;}
+					if (word.isEmpty()) {
+						continue;
+					}
 					if (wordHashMap.containsKey(word)) {
 						wordHashMap.put(word, wordHashMap.get(word) + 1);
 					} else {
@@ -54,15 +62,15 @@ public class WordCount {
 		} finally {
 			writer.close();
 		}
-		
+
 		ArrayList<Map.Entry<String, Integer>> sortedList = entriesSortedByValues(wordHashMap);
 		try {
 			writer = new PrintWriter("top10.csv", "UTF-8");
 			writer.println("word, frequency");
 			Map.Entry<String, Integer> entry;
-			for (int i = 0; i < Math.min(10,sortedList.size()); i++) {
+			for (int i = 0; i < Math.min(10, sortedList.size()); i++) {
 				entry = sortedList.get(i);
-				writer.printf("%s, %d\n",entry.getKey(),entry.getValue());
+				writer.printf("%s, %d\n", entry.getKey(), entry.getValue());
 			}
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
@@ -70,7 +78,7 @@ public class WordCount {
 		} finally {
 			writer.close();
 		}
-		
+
 	}
 
 	static <K, V extends Comparable<? super V>> ArrayList<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
