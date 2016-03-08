@@ -20,8 +20,45 @@ import java.util.Map;
  */
 
 public class WordCount {
+
+	ArrayList<Word> wordAL;
+
 	public static void main(String[] argv) {
+		Word word = new Word();
+		word.count = 4;
 		String fileName = "pg2600.txt";
+
+	}
+
+	private class Word implements Comparable<Word>{
+		private String word;
+		private Integer count;
+		public Word(){
+			word="";
+			count=0;
+		}
+		public Word(String word){
+			this.word=word;
+			this.count=0;
+		}
+		public void increaseCount(){
+			count++;
+		}
+		public void setWord(String word){
+			this.word = word;
+		}
+		public void setCount(Integer count){
+			this.count = count;
+		}
+		@Override
+		public int compareTo(Word o) {
+			return this.word.compareTo(o.word);
+		}	
+	}
+
+
+	
+	public void populate(String fileName) {
 		HashMap<String, Integer> wordHashMap = new HashMap<String, Integer>();
 		BufferedReader br;
 		try {
@@ -49,36 +86,43 @@ public class WordCount {
 			// System.out.printf("The occurrence of the word %s in the file was
 			// %d.\n", wordToCount, count);
 		}
-		PrintWriter writer = null;
-		try {
-			writer = new PrintWriter("tf.csv", "UTF-8");
-			writer.println("word, frequency");
-			for (String word : wordHashMap.keySet()) {
-				writer.printf("%s, %d\n", word, wordHashMap.get(word));
-			}
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			writer.close();
-		}
+	}
 
-		ArrayList<Map.Entry<String, Integer>> sortedList = entriesSortedByValues(wordHashMap);
-		try {
-			writer = new PrintWriter("top10.csv", "UTF-8");
-			writer.println("word, frequency");
-			Map.Entry<String, Integer> entry;
-			for (int i = 0; i < Math.min(10, sortedList.size()); i++) {
-				entry = sortedList.get(i);
-				writer.printf("%s, %d\n", entry.getKey(), entry.getValue());
-			}
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			writer.close();
+	PrintWriter writer = null;
+	try
+	{
+		writer = new PrintWriter("tf.csv", "UTF-8");
+		writer.println("word, frequency");
+		for (String word : wordHashMap.keySet()) {
+			writer.printf("%s, %d\n", word, wordHashMap.get(word));
 		}
+	}catch(FileNotFoundException|
+	UnsupportedEncodingException e)
+	{
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}finally
+	{
+		writer.close();
+	}
 
+	ArrayList<Map.Entry<String, Integer>> sortedList = entriesSortedByValues(wordHashMap);try
+	{
+		writer = new PrintWriter("top10.csv", "UTF-8");
+		writer.println("word, frequency");
+		Map.Entry<String, Integer> entry;
+		for (int i = 0; i < Math.min(10, sortedList.size()); i++) {
+			entry = sortedList.get(i);
+			writer.printf("%s, %d\n", entry.getKey(), entry.getValue());
+		}
+	}catch(FileNotFoundException|
+	UnsupportedEncodingException e)
+	{
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}finally
+	{
+		writer.close();
 	}
 
 	static <K, V extends Comparable<? super V>> ArrayList<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
