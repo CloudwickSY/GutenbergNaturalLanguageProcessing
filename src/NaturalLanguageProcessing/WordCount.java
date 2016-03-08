@@ -24,46 +24,127 @@ public class WordCount {
 	ArrayList<Word> wordAL;
 
 	public static void main(String[] argv) {
-		Word word = new Word();
-		word.count = 4;
+		// Word wordd = new WordCount().new Word();
+		// wordd.count = 4;
+		// @SuppressWarnings("unused")
 		String fileName = "pg2600.txt";
-
+		WordCount wordCount = new WordCount();
+		wordCount.populate(fileName);
+		//Collections.sort(arraylist, Student.StuNameComparator);
 	}
 
-	private class Word implements Comparable<Word>{
+	public WordCount() {
+		wordAL = new ArrayList<Word>();
+	}
+
+	private class Word implements Comparable<Word> {
 		private String word;
 		private Integer count;
-		public Word(){
-			word="";
-			count=0;
+
+		public Word() {
+			word = "";
+			count = 0;
 		}
-		public Word(String word){
-			this.word=word;
-			this.count=0;
+
+		public Word(String word) {
+			this.word = word;
+			this.count = 0;
 		}
-		public void increaseCount(){
+
+		public Word(Word word) {
+			this.word = word.word;
+			this.count = word.count;
+		}
+
+		public Word increaseCount() {
 			count++;
+			return this;
 		}
-		public void setWord(String word){
+
+		public void resetWord(String word) {
+			this.setWord(word);
+			this.setCount(0);
+		}
+
+		public void setWord(String word) {
 			this.word = word;
 		}
-		public void setCount(Integer count){
+
+		public void setCount(Integer count) {
 			this.count = count;
 		}
+
+		public String getWord() {
+			return this.word;
+		}
+
+		public Integer getCount() {
+			return this.count;
+		}
+
+		public Comparator<Word> WordComparator = new Comparator<Word>() {
+
+			public int compare(Word w1, Word w2) {
+				String wordOne = w1.word;
+				String wordTwo = w2.word;
+				// ascending order
+				return wordOne.compareTo(wordTwo);
+			}
+		};
+
+		/* Comparator for sorting the list by roll no */
+		public Comparator<Word> CountComparator = new Comparator<Word>() {
+
+			public int compare(Word w1, Word w2) {
+
+				int rollno1 = w1.getCount();
+				int rollno2 = w2.getCount();
+
+				/* For ascending order */
+				return rollno1 - rollno2;
+
+				/* For descending order */
+				// rollno2-rollno1;
+			}
+		};
+
+		@Override
+		public String toString() {
+			return this.word;
+		}
+
 		@Override
 		public int compareTo(Word o) {
 			return this.word.compareTo(o.word);
-		}	
+		}
+		
+		@Override
+		public boolean equals(Object object) {
+			boolean isEqual = false;
+
+			if (object != null && object instanceof Word) {
+				isEqual = (this.word.equals(((Word) object).word));
+			}
+
+			return isEqual;
+		}
+
+		@Override
+		public int hashCode() {
+			int hash = 7;
+			for (int i = 0; i < this.word.length(); i++) {
+				hash = hash * 31 + this.word.charAt(i);
+			}
+			return hash;
+		}
 	}
 
-
-	
-	public void populate(String fileName) {
-		HashMap<String, Integer> wordHashMap = new HashMap<String, Integer>();
-		BufferedReader br;
+	public void populate(String fileName){
+		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(fileName));
 			String line = null;
+			Word myword = new Word();
 			while ((line = br.readLine()) != null) {
 				line = line.replaceAll("[^A-z]", " ");
 				for (String word : line.split(" ")) {
@@ -71,68 +152,62 @@ public class WordCount {
 					if (word.isEmpty()) {
 						continue;
 					}
-					if (wordHashMap.containsKey(word)) {
-						wordHashMap.put(word, wordHashMap.get(word) + 1);
+					myword.setWord(word);
+					int indexWord = wordAL.indexOf(myword);
+					if (indexWord >= 0) {
+						//System.out.printf("%s:%d||%d-%s\n",myword.getWord(),indexWord,wordAL.size(),wordAL.get(0).word);
+						//System.out.println("~~");
+						wordAL.set(indexWord, wordAL.get(indexWord).increaseCount());
+						// (new Exception(""));
 					} else {
-						wordHashMap.put(word, 1);
+						//System.out.println("~1~");
+						wordAL.add(new Word(word));
 					}
 				}
 			}
+
 		} catch (FileNotFoundException e) {
 			System.out.printf("File not found.\n");
 		} catch (IOException e) {
 			System.out.printf("BufferReader Error.\n");
 		} finally {
-			// System.out.printf("The occurrence of the word %s in the file was
-			// %d.\n", wordToCount, count);
-		}
-	}
-
-	PrintWriter writer = null;
-	try
-	{
-		writer = new PrintWriter("tf.csv", "UTF-8");
-		writer.println("word, frequency");
-		for (String word : wordHashMap.keySet()) {
-			writer.printf("%s, %d\n", word, wordHashMap.get(word));
-		}
-	}catch(FileNotFoundException|
-	UnsupportedEncodingException e)
-	{
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}finally
-	{
-		writer.close();
-	}
-
-	ArrayList<Map.Entry<String, Integer>> sortedList = entriesSortedByValues(wordHashMap);try
-	{
-		writer = new PrintWriter("top10.csv", "UTF-8");
-		writer.println("word, frequency");
-		Map.Entry<String, Integer> entry;
-		for (int i = 0; i < Math.min(10, sortedList.size()); i++) {
-			entry = sortedList.get(i);
-			writer.printf("%s, %d\n", entry.getKey(), entry.getValue());
-		}
-	}catch(FileNotFoundException|
-	UnsupportedEncodingException e)
-	{
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}finally
-	{
-		writer.close();
-	}
-
-	static <K, V extends Comparable<? super V>> ArrayList<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
-		ArrayList<Map.Entry<K, V>> sortedEntries = new ArrayList<Map.Entry<K, V>>(map.entrySet());
-		Collections.sort(sortedEntries, new Comparator<Map.Entry<K, V>>() {
-			@Override
-			public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
-				return e2.getValue().compareTo(e1.getValue());
+			try {
+				br.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		});
-		return sortedEntries;
+		}
 	}
+
+	
+	
+	/*
+	 * PrintWriter writer = null;try { writer = new PrintWriter("tf.csv",
+	 * "UTF-8"); writer.println("word, frequency"); for (String word :
+	 * wordHashMap.keySet()) { writer.printf("%s, %d\n", word,
+	 * wordHashMap.get(word)); } }catch(FileNotFoundException|
+	 * UnsupportedEncodingException e) { // TODO Auto-generated catch block
+	 * e.printStackTrace(); }finally { writer.close(); }
+	 * 
+	 * ArrayList<Map.Entry<String, Integer>> sortedList =
+	 * entriesSortedByValues(wordHashMap);try { writer = new
+	 * PrintWriter("top10.csv", "UTF-8"); writer.println("word, frequency");
+	 * Map.Entry<String, Integer> entry; for (int i = 0; i < Math.min(10,
+	 * sortedList.size()); i++) { entry = sortedList.get(i); writer.printf(
+	 * "%s, %d\n", entry.getKey(), entry.getValue()); }
+	 * }catch(FileNotFoundException| UnsupportedEncodingException e) { // TODO
+	 * Auto-generated catch block e.printStackTrace(); }finally {
+	 * writer.close(); }
+	 * 
+	 * static <K, V extends Comparable<? super V>> ArrayList<Map.Entry<K, V>>
+	 * entriesSortedByValues(Map<K, V> map) { ArrayList<Map.Entry<K, V>>
+	 * sortedEntries = new ArrayList<Map.Entry<K, V>>(map.entrySet());
+	 * Collections.sort(sortedEntries, new Comparator<Map.Entry<K, V>>() {
+	 * 
+	 * @Override public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
+	 * return e2.getValue().compareTo(e1.getValue()); } }); return
+	 * sortedEntries; }
+	 */
+
 }
