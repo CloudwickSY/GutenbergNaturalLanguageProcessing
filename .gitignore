@@ -18,5 +18,4 @@ hs_err_pid*
 bin/
 # other
 pg2600.txt
-tf.csv
-top10.csv
+*.csv
