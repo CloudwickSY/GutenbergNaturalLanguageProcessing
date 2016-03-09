@@ -7,37 +7,28 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-/*
- * Goal :
- * Can't save to file
- * Can't figure out duplicates
- * Sorting
- */
 
 public class WordCount {
 
 	ArrayList<Word> wordAL;
 
 	public static void main(String[] argv) {
-		// Word wordd = new WordCount().new Word();
-		// wordd.count = 4;
-		// @SuppressWarnings("unused")
 		String fileName = "pg2600.txt";
 		WordCount wordCount = new WordCount();
 		wordCount.populate(fileName);
 		wordCount.printToFile("tf_2.csv");
-		wordCount.sort();
-		wordCount.printToFile("top10_2.csv");
-		// Collections.sort(arraylist, Student.StuNameComparator);
+		wordCount.sort(false);
+		wordCount.printToFile("top10_2.csv",10);
 	}
 
-	private void sort() {
-		wordAL.sort(Word.CountComparator);
+	private void sort(Boolean ascending) {
+		if (ascending) {
+			wordAL.sort(Word.CountComparator);
+		} else {
+			wordAL.sort(Word.CountComparatorDescending);
+		}
 	}
 
 	public WordCount() {
@@ -55,7 +46,7 @@ public class WordCount {
 
 		public Word(String word) {
 			this.word = word;
-			this.count = 0;
+			this.count = 1;
 		}
 
 		public Word(Word word) {
@@ -66,11 +57,6 @@ public class WordCount {
 		public Word increaseCount() {
 			count++;
 			return this;
-		}
-
-		public void resetWord(String word) {
-			this.setWord(word);
-			this.setCount(0);
 		}
 
 		public void setWord(String word) {
@@ -99,19 +85,24 @@ public class WordCount {
 			}
 		};
 
-		/* Comparator for sorting the list by roll no */
+		/* Comparator for sorting the list by count no ascending*/
 		public static Comparator<Word> CountComparator = new Comparator<Word>() {
-
 			public int compare(Word w1, Word w2) {
-
 				int rollno1 = w1.getCount();
 				int rollno2 = w2.getCount();
-
 				/* For ascending order */
 				return rollno1 - rollno2;
+			}
+		};
 
+		/* Comparator for sorting the list by count no descending*/
+		public static Comparator<Word> CountComparatorDescending = new Comparator<Word>() {
+
+			public int compare(Word w1, Word w2) {
+				int rollno1 = w1.getCount();
+				int rollno2 = w2.getCount();
 				/* For descending order */
-				// rollno2-rollno1;
+				return rollno2 - rollno1;
 			}
 		};
 
@@ -146,6 +137,13 @@ public class WordCount {
 		}
 	}
 
+	/**
+	 * Populate will parse an existing file and populate the array containing the
+	 * words and their frequency
+	 * 
+	 * @param fileName
+	 *            the file that we are parsing
+	 */
 	public void populate(String fileName) {
 		BufferedReader br = null;
 		try {
@@ -188,11 +186,18 @@ public class WordCount {
 	}
 
 	public void printToFile(String fileName) {
+		printToFile(fileName, this.wordAL.size());
+	}
+
+	public void printToFile(String fileName, int howMany) {
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(fileName, "UTF-8");
 			writer.println("word, frequency");
 			for (Word word : this.wordAL) {
+				if (--howMany < 0) {
+					break;
+				}
 				writer.printf("%s, %d\n", word.getWord(), word.getCount());
 			}
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
@@ -201,7 +206,5 @@ public class WordCount {
 		} finally {
 			writer.close();
 		}
-
 	}
-
 }
