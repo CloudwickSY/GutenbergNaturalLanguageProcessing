@@ -15,6 +15,7 @@ import java.util.Map;
 
 public class WordCount {
 	public static void main(String[] argv) {
+		double start = System.currentTimeMillis();
 		String fileName = "pg2600.txt";
 		HashMap<String, Integer> wordHashMap = new HashMap<String, Integer>();
 		BufferedReader br;
@@ -70,7 +71,8 @@ public class WordCount {
 		} finally {
 			writer.close();
 		}
-		
+		double stop = System.currentTimeMillis();
+		System.out.println(stop-start);
 	}
 
 	static <K, V extends Comparable<? super V>> ArrayList<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
