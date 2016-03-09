@@ -30,14 +30,21 @@ public class WordCount {
 		String fileName = "pg2600.txt";
 		WordCount wordCount = new WordCount();
 		wordCount.populate(fileName);
-		//Collections.sort(arraylist, Student.StuNameComparator);
+		wordCount.printToFile("tf_2.csv");
+		wordCount.sort();
+		wordCount.printToFile("top10_2.csv");
+		// Collections.sort(arraylist, Student.StuNameComparator);
+	}
+
+	private void sort() {
+		wordAL.sort(Word.CountComparator);
 	}
 
 	public WordCount() {
 		wordAL = new ArrayList<Word>();
 	}
 
-	private class Word implements Comparable<Word> {
+	private static class Word implements Comparable<Word> {
 		private String word;
 		private Integer count;
 
@@ -82,7 +89,7 @@ public class WordCount {
 			return this.count;
 		}
 
-		public Comparator<Word> WordComparator = new Comparator<Word>() {
+		public static Comparator<Word> WordComparator = new Comparator<Word>() {
 
 			public int compare(Word w1, Word w2) {
 				String wordOne = w1.word;
@@ -93,7 +100,7 @@ public class WordCount {
 		};
 
 		/* Comparator for sorting the list by roll no */
-		public Comparator<Word> CountComparator = new Comparator<Word>() {
+		public static Comparator<Word> CountComparator = new Comparator<Word>() {
 
 			public int compare(Word w1, Word w2) {
 
@@ -117,7 +124,7 @@ public class WordCount {
 		public int compareTo(Word o) {
 			return this.word.compareTo(o.word);
 		}
-		
+
 		@Override
 		public boolean equals(Object object) {
 			boolean isEqual = false;
@@ -139,7 +146,7 @@ public class WordCount {
 		}
 	}
 
-	public void populate(String fileName){
+	public void populate(String fileName) {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(fileName));
@@ -155,12 +162,12 @@ public class WordCount {
 					myword.setWord(word);
 					int indexWord = wordAL.indexOf(myword);
 					if (indexWord >= 0) {
-						//System.out.printf("%s:%d||%d-%s\n",myword.getWord(),indexWord,wordAL.size(),wordAL.get(0).word);
-						//System.out.println("~~");
+						// System.out.printf("%s:%d||%d-%s\n",myword.getWord(),indexWord,wordAL.size(),wordAL.get(0).word);
+						// System.out.println("~~");
 						wordAL.set(indexWord, wordAL.get(indexWord).increaseCount());
 						// (new Exception(""));
 					} else {
-						//System.out.println("~1~");
+						// System.out.println("~1~");
 						wordAL.add(new Word(word));
 					}
 				}
@@ -180,34 +187,21 @@ public class WordCount {
 		}
 	}
 
-	
-	
-	/*
-	 * PrintWriter writer = null;try { writer = new PrintWriter("tf.csv",
-	 * "UTF-8"); writer.println("word, frequency"); for (String word :
-	 * wordHashMap.keySet()) { writer.printf("%s, %d\n", word,
-	 * wordHashMap.get(word)); } }catch(FileNotFoundException|
-	 * UnsupportedEncodingException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); }finally { writer.close(); }
-	 * 
-	 * ArrayList<Map.Entry<String, Integer>> sortedList =
-	 * entriesSortedByValues(wordHashMap);try { writer = new
-	 * PrintWriter("top10.csv", "UTF-8"); writer.println("word, frequency");
-	 * Map.Entry<String, Integer> entry; for (int i = 0; i < Math.min(10,
-	 * sortedList.size()); i++) { entry = sortedList.get(i); writer.printf(
-	 * "%s, %d\n", entry.getKey(), entry.getValue()); }
-	 * }catch(FileNotFoundException| UnsupportedEncodingException e) { // TODO
-	 * Auto-generated catch block e.printStackTrace(); }finally {
-	 * writer.close(); }
-	 * 
-	 * static <K, V extends Comparable<? super V>> ArrayList<Map.Entry<K, V>>
-	 * entriesSortedByValues(Map<K, V> map) { ArrayList<Map.Entry<K, V>>
-	 * sortedEntries = new ArrayList<Map.Entry<K, V>>(map.entrySet());
-	 * Collections.sort(sortedEntries, new Comparator<Map.Entry<K, V>>() {
-	 * 
-	 * @Override public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
-	 * return e2.getValue().compareTo(e1.getValue()); } }); return
-	 * sortedEntries; }
-	 */
+	public void printToFile(String fileName) {
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(fileName, "UTF-8");
+			writer.println("word, frequency");
+			for (Word word : this.wordAL) {
+				writer.printf("%s, %d\n", word.getWord(), word.getCount());
+			}
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// To do auto generated
+			e.printStackTrace();
+		} finally {
+			writer.close();
+		}
+
+	}
 
 }
