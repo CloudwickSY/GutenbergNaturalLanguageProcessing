@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 public class WordCount {
 	public static void main(String[] argv) {
+		double start = System.currentTimeMillis();
 		String wordToCount = "the", fileName = "pg2600.txt";
 		int count = 0;
 		BufferedReader br = null;
@@ -34,5 +35,7 @@ public class WordCount {
 			}
 			System.out.printf("The occurance of the word %s in the fille was %d.\n", wordToCount, count);
 		}
+		double stop = System.currentTimeMillis();
+		System.out.println(stop-start);
 	}
 }
