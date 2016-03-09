@@ -10,17 +10,26 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Locale;
 
+/**
+ * Word frequency counter (indexing) for a word file
+ * implemented with ArrayList<Word>
+ * Where word is defined as the tuple word frequency.
+ * @author Stanislav
+ */
 public class WordCount {
 
 	ArrayList<Word> wordAL;
 
 	public static void main(String[] argv) {
+		double start = System.currentTimeMillis();
 		String fileName = "pg2600.txt";
 		WordCount wordCount = new WordCount();
 		wordCount.populate(fileName);
 		wordCount.printToFile("tf_2.csv");
 		wordCount.sort(false);
 		wordCount.printToFile("top10_2.csv",10);
+		double end = System.currentTimeMillis();
+		System.out.println(end-start);
 	}
 
 	private void sort(Boolean ascending) {
